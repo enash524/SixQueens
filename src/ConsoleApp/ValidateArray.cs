@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace ConsoleApp
 {
@@ -14,6 +15,18 @@ namespace ConsoleApp
         /// </summary>
         private const int MAX_LENGTH = 6;
 
+        private readonly ILogger<ValidateArray> _logger;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ValidateArray`1"/> class.
+        /// </summary>
+        /// <param name="logger">DI injected logger</param>
+        public ValidateArray(ILogger<ValidateArray> logger)
+        {
+            _logger = logger;
+            _logger.LogInformation("ValidateArray Constructor");
+        }
+
         /// <summary>
         /// Methods for validating the input array to verify that no two queens are in the same row or diagonal
         /// </summary>
@@ -21,13 +34,17 @@ namespace ConsoleApp
         /// <returns>Returns true if the input array does not contain two queens in the same row or diagonal, false otherwise</returns>
         public string ValidateArrayInput(int[] arr)
         {
+            _logger.LogInformation("Entering ValidateArrayInput");
+
             if (arr == null)
             {
+                _logger.LogError($"Input array cannot be null (Parameter '{nameof(arr)}')");
                 throw new ArgumentNullException(nameof(arr), "Input array cannot be null");
             }
 
             if (arr.Length != MAX_LENGTH)
             {
+                _logger.LogError($"Input array must contain 6 elements (Parameter '{nameof(arr)}')");
                 throw new ArgumentException("Input array must contain 6 elements", nameof(arr));
             }
 
