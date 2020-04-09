@@ -13,8 +13,15 @@ namespace XUnitTestProject.Extensions
 
         public static void VerifyLog<T>(this Mock<ILogger<T>> loggerMock, LogLevel level, string message, Times times, string failMessage = null)
         {
-            loggerMock.Verify(l => l.Log(level, It.IsAny<EventId>(), It.Is<It.IsAnyType>(o => o.ToString() == message), null,
-                    It.IsAny<Func<object, Exception, string>>()), times, failMessage);
+            loggerMock
+                .Verify(l => l.Log(
+                    level,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((m, t) => string.Equals(m.ToString(), message)),
+                    It.IsAny<Exception>(),
+                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),
+                    times,
+                    failMessage);
         }
     }
 }
